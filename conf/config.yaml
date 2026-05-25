@@ -1,0 +1,18 @@
+# conf/config.yaml
+defaults:
+  - data: cifar10
+  - model: cifar_convkan
+  - _self_
+
+trainer:
+  max_epochs: 20
+  accelerator: "gpu"
+  devices: 1
+  precision: "16-mixed"
+  log_every_n_steps: 100
+  deterministic: false
+  logger:
+    _target_: pytorch_lightning.loggers.MLFlowLogger
+    experiment_name: "CIFAR10_ConvKAN_Baseline"
+    tracking_uri: ${oc.env:MLFLOW_TRACKING_URI}
+    log_model: True
