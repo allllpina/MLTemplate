@@ -4,3 +4,7 @@
 /data
 todo.txt
 PROJECT_CONTEXT.md
+
+__pycache__/
+*.py[cod]
+*$py.class
