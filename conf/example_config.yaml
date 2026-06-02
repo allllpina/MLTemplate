@@ -1,8 +1,13 @@
 # conf/config.yaml
 defaults:
-  - data: cifar10
-  - model: cifar_convkan
+  - data: cifar10_example
+  - model: convkan_example
   - _self_
+
+task:
+  _target_: src.models.classification_task_example.ClassifierTask
+  lr: 1e-3
+  num_classes: ${model.num_classes}
 
 trainer:
   max_epochs: 20

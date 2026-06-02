@@ -1,5 +1,0 @@
-# conf/model/cifar_convkan.yaml
-_target_: src.models.architecture.HybridConvKAN
-input_channels: 3 
-num_classes: 10
-dropout_rate: 0.3

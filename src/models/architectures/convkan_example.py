@@ -2,11 +2,11 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class SimpleKANLayer(nn.Module):
+class SimpleKANLayer(nn.Module): 
+    # To be completed
     def __init__(self, in_features, out_features):
         super().__init__()
         self.linear = nn.Linear(in_features=in_features, out_features=out_features)
-
     def forward(self, x):
         return F.silu(self.linear(x))
     

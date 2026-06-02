@@ -1,6 +1,0 @@
-lr: 0.001
-num_classes: 10
-data_dir: data/raw
-batch_size: 64
-num_workers: 4
-pin_memory: true

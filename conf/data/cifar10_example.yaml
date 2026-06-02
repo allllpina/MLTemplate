@@ -1,4 +1,4 @@
-_target_: src.data.cifar_datamodule.CIFAR10DataModule
+_target_: src.data.cifar10_example.CIFAR10DataModule
 data_dir: "data/raw"
 batch_size: 64
 num_workers: 4
