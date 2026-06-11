@@ -1,7 +1,8 @@
 .direnv
 .venv
 .envrc
-/data
+data/*
+!data/.gitkeep
 todo.txt
 PROJECT_CONTEXT.md
 

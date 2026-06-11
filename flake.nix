@@ -9,36 +9,40 @@
       pkgs = import nixpkgs { 
         inherit system;
         config.allowUnfree = true;
-        };
+      };
     in {
       devShells.${system}.default = pkgs.mkShell {
         name = "ml-framework";
         
-        buildInputs = [
-          pkgs.python312
-          pkgs.python312Packages.pip
-          pkgs.python312Packages.virtualenv
-          pkgs.git
-          pkgs.dvc
-          pkgs.zlib
-          pkgs.stdenv.cc.cc.lib
-          pkgs.linuxPackages.nvidia_x11
+        buildInputs = with pkgs; [
+          tree
+          uv
+          python312
+          git
+          dvc
+          zlib
+          glib
+          stdenv.cc.cc.lib
+          linuxPackages.nvidia_x11
         ];
 
         shellHook = ''
-          export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.linuxPackages.nvidia_x11}/lib:$LD_LIBRARY_PATH
+          export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [
+            pkgs.zlib
+            pkgs.glib
+            pkgs.stdenv.cc.cc.lib
+            pkgs.linuxPackages.nvidia_x11
+          ]}:$LD_LIBRARY_PATH
           
-          if [ ! -d ".venv" ]; then
-            echo "Creating virtual environment..."
-            python -m venv .venv
+          unset PYTHONPATH
+          
+          if [ -f "pyproject.toml" ]; then
+            echo "Syncing dependencies with uv..."
+            uv sync
+            source .venv/bin/activate
+          else
+            echo "pyproject.toml не знайдено."
           fi
-          
-          source .venv/bin/activate
-          
-          echo "========================================="
-          echo "Run the following to install packages:"
-          echo "pip install torch torchvision pytorch-lightning numpy pandas scikit-learn mlflow dvc hydra-core typer rich"
-          echo "========================================="
         '';
       };
     };
