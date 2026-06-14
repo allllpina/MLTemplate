@@ -8,6 +8,8 @@ import pytorch_lightning as pl
 from rich.console import Console
 from rich.traceback import install
 import torch
+from dotenv import load_dotenv
+load_dotenv()
 
 install(show_locals=True, word_wrap=True)
 
