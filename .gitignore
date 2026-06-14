@@ -1,11 +1,21 @@
 .direnv
 .venv
 .envrc
-data/*
-!data/.gitkeep
+.dvc
+.dvcignore
+dvc.yaml
+data.dvc
 todo.txt
 PROJECT_CONTEXT.md
 
 __pycache__/
 *.py[cod]
 *$py.class
+.python-version
+
+
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
