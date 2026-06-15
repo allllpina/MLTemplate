@@ -22,55 +22,39 @@ make dotenv_init
 ### File structure
 ```
 .
-├── .bash_scripts
-│   ├── env_init.sh
-│   └── .gitkeep
-├── conf
-│   ├── data
+├── .bash_scripts/
+├── scripts/ # Made for additional scripts e.g. for creating dvc.yaml data pipelines 
+├── data/
+│   ├── .gitkeep
+│   ├── processed/
+│   └── raw/
+├── conf/
+│   ├── data/
 │   │   ├── cifar10_example.yaml
 │   │   └── README.md
-│   ├── example_config.yaml
-│   ├── model
+│   ├── model/
 │   │   ├── convkan_example.yaml
 │   │   └── README.md
+│   ├── example_config.yaml
 │   └── README.md
-├── data
-│   ├── .gitkeep
-│   ├── processed
-│   │   └── .gitkeep
-│   └── raw
-│       ├── cifar-10-batches-py
-│       │   ├── batches.meta
-│       │   ├── data_batch_1
-│       │   ├── data_batch_2
-│       │   ├── data_batch_3
-│       │   ├── data_batch_4
-│       │   ├── data_batch_5
-│       │   ├── readme.html
-│       │   └── test_batch
-│       ├── cifar-10-python.tar.gz
-│       └── .gitkeep
-├── .env
-├── .env.example
-├── flake.lock
-├── flake.nix
-├── .gitignore
-├── Makefile
-├── pyproject.toml
-├── README.md
-├── scripts # Made for additional scripts e.g. for creating dvc.yaml data pipelines 
-│   └── .gitkeep
-├── src
-│   ├── cli.py
-│   ├── data
+├── src/
+│   ├── models/
+│   │   ├── architectures
+│   │   │   ├── convkan_example.py
+│   │   │   └── README.md
+│   │   ├── classification_task_example.py
+│   │   └── README.md
+│   ├── data/
 │   │   ├── cifar10_example.py
 │   │   └── README.md
-│   └── models
-│       ├── architectures
-│       │   ├── convkan_example.py
-│       │   └── README.md
-│       ├── classification_task_example.py
-│       └── README.md
+│   └── cli.py
+├── .env.example
+├── Makefile
+├── .gitignore
+├── pyproject.toml
+├── flake.lock
+├── flake.nix
+├── README.md
 └── uv.lock
 ```
 `About certain directories`
