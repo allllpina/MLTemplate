@@ -3,18 +3,19 @@ import torch
 import torch.nn.functional as F
 from torchmetrics import Accuracy, F1Score
 
+
 class ClassifierTask(pl.LightningModule):
     def __init__(self, model: torch.nn.Module, lr: float = 1e-3, num_classes: int = 10):
-            super().__init__()
-            self.save_hyperparameters(ignore=['model'])
-            self.model = model
-            # Train
-            self.train_acc = Accuracy(task="multiclass", num_classes=num_classes)
-            self.val_acc = Accuracy(task="multiclass", num_classes=num_classes)
-            self.val_f1 = F1Score(task="multiclass", num_classes=num_classes, average="macro")
-            # Test
-            self.test_acc = Accuracy(task="multiclass", num_classes=num_classes)
-            self.test_f1 = F1Score(task="multiclass", num_classes=num_classes, average="macro")
+        super().__init__()
+        self.save_hyperparameters(ignore=["model"])
+        self.model = model
+        # Train
+        self.train_acc = Accuracy(task="multiclass", num_classes=num_classes)
+        self.val_acc = Accuracy(task="multiclass", num_classes=num_classes)
+        self.val_f1 = F1Score(task="multiclass", num_classes=num_classes, average="macro")
+        # Test
+        self.test_acc = Accuracy(task="multiclass", num_classes=num_classes)
+        self.test_f1 = F1Score(task="multiclass", num_classes=num_classes, average="macro")
 
     def forward(self, x):
         return self.model(x)
@@ -23,13 +24,13 @@ class ClassifierTask(pl.LightningModule):
         x, y = batch
         logits = self.forward(x)
         loss = F.cross_entropy(logits, y)
-        
+
         # Логування
         acc = self.train_acc(logits, y)
-        self.log('train_loss', loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log('train_acc', acc, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train_acc", acc, on_step=False, on_epoch=True, prog_bar=True)
         return loss
-    
+
     def validation_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
@@ -39,9 +40,9 @@ class ClassifierTask(pl.LightningModule):
         acc = self.val_acc(logits, y)
         f1 = self.val_f1(logits, y)
 
-        self.log('val_loss', loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
-        self.log('val_acc', acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
-        self.log('val_f1', f1, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("val_acc", acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("val_f1", f1, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
 
     def test_step(self, batch, batch_idx):
         x, y = batch
@@ -52,17 +53,17 @@ class ClassifierTask(pl.LightningModule):
         acc = self.test_acc(logits, y)
         f1 = self.test_f1(logits, y)
 
-        self.log('test_loss', loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
-        self.log('test_acc', acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
-        self.log('test_f1', f1, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("test_loss", loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("test_acc", acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log("test_f1", f1, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
 
     def configure_optimizers(self):
         # Класичний AdamW
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams.lr, weight_decay=1e-4)
-        
+
         # Scheduler для поступового зменшення learning rate
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer, mode='min', factor=0.5, patience=3
+            optimizer, mode="min", factor=0.5, patience=3
         )
         return {
             "optimizer": optimizer,
