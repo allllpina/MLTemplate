@@ -1,4 +1,6 @@
 # Machine Learning Experiments Template
+This project is licensed under the PolyForm Noncommercial 1.0.0 license. You are free to use, modify, and distribute this software for non-commercial purposes.
+---
 This template based on PyTorch Lightning and designed to simplify experiments with different Neural Network architectures and data processing pipelines
 
 ## Quick start
