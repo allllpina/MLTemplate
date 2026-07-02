@@ -12,9 +12,10 @@ format:
 	uv run --active ruff format .
 	uv run --active ruff check --fix .
 lint:
+	uv run --active ruff format --check .
 	uv run --active ruff check .
 	uv run --active mypy src/
-check: format lint
+check: lint
 clean:
 	rm -rf .mypy_cache .ruff_cache
 	uv cache clean
