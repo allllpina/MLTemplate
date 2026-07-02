@@ -1,0 +1,30 @@
+name: Code Quality & Linting
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+  
+    steps:
+      # 1. Pull code from repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Installing uv
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: "3.12"
+
+      # 3. Installing all dependencies
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      # 4. Run all linters
+      - name: Run Quality Checks
+        run: make check
