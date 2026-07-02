@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 from efficient_kan import KAN
 
@@ -34,11 +35,11 @@ class HybridConvKAN(nn.Module):
             [self._to_linear, 64, num_classes], grid_size=grid_size, spline_order=spline_order
         )
 
-    def forward(self, x):
+    def forward(self, x) -> torch.Tensor:  # type: ignore[no-untyped-def]
         x = self.encoder(x)
         x = self.pool(x)
         x = self.dropout(x)
         x = self.flatten(x)
 
         logits = self.kan_classifier(x)
-        return logits
+        return logits  # type: ignore[no-any-return]

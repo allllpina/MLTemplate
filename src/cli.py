@@ -24,7 +24,7 @@ def train(
     config_name: str = typer.Option(
         "config", "--config", "-c", help="Name of the main configuration file"
     ),
-):
+) -> None:
     """
     Starts training cycle of the model based on declared config
     """
@@ -119,7 +119,7 @@ def test(
     config_name: str = typer.Option(
         "config", "--config", "-c", help="Name of the name config file"
     ),
-):
+) -> None:
     """
     Tests trained model on train dataset using saved weights
     """
@@ -141,9 +141,8 @@ def test(
     architecture = instantiate(cfg.model)
 
     console.print("[bold blue]Task weights loading...[/bold blue]")
-    TaskClass = get_class(cfg.task._target_)
 
-    # 2. Task class initialization
+    TaskClass: type[pl.LightningModule] = get_class(cfg.task._target_)
     task = TaskClass.load_from_checkpoint(actual_checkpoint_path, model=architecture)
 
     console.print("[bold blue]Initialization of PyTorch Lightning Trainer...[/bold blue]")

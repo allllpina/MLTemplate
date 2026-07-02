@@ -1,3 +1,5 @@
+from typing import Any
+
 import pytorch_lightning as pl
 import torch
 import torch.nn.functional as F
@@ -17,10 +19,12 @@ class ClassifierTask(pl.LightningModule):
         self.test_acc = Accuracy(task="multiclass", num_classes=num_classes)
         self.test_f1 = F1Score(task="multiclass", num_classes=num_classes, average="macro")
 
-    def forward(self, x):
-        return self.model(x)
+    def forward(self, x) -> torch.Tensor:  # type: ignore[no-untyped-def]
+        return self.model(x)  # type: ignore[no-any-return]
 
-    def training_step(self, batch, batch_idx):
+    def training_step(
+        self, batch: tuple[torch.Tensor, torch.Tensor], batch_idx: int = 0
+    ) -> torch.Tensor:
         x, y = batch
         logits = self.forward(x)
         loss = F.cross_entropy(logits, y)
@@ -31,7 +35,7 @@ class ClassifierTask(pl.LightningModule):
         self.log("train_acc", acc, on_step=False, on_epoch=True, prog_bar=True)
         return loss
 
-    def validation_step(self, batch, batch_idx):
+    def validation_step(self, batch: tuple[torch.Tensor, torch.Tensor], batch_idx: int = 0) -> None:
         x, y = batch
         logits = self(x)
 
@@ -44,7 +48,7 @@ class ClassifierTask(pl.LightningModule):
         self.log("val_acc", acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
         self.log("val_f1", f1, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
 
-    def test_step(self, batch, batch_idx):
+    def test_step(self, batch: tuple[torch.Tensor, torch.Tensor], batch_idx: int = 0) -> None:
         x, y = batch
         logits = self(x)
 
@@ -57,9 +61,9 @@ class ClassifierTask(pl.LightningModule):
         self.log("test_acc", acc, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
         self.log("test_f1", f1, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
 
-    def configure_optimizers(self):
+    def configure_optimizers(self) -> Any:
         # Класичний AdamW
-        optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams.lr, weight_decay=1e-4)
+        optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams["lr"], weight_decay=1e-4)
 
         # Scheduler для поступового зменшення learning rate
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(

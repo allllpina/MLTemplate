@@ -1,3 +1,5 @@
+from typing import Any
+
 import pytorch_lightning as pl
 import torch
 from torch.utils.data import DataLoader, random_split
@@ -22,15 +24,15 @@ class CIFAR10DataModule(pl.LightningDataModule):
             ]
         )
 
-    def prepare_data(self):
+    def prepare_data(self) -> None:
         # Завантажує дані (викликається лише на 1 GPU)
-        datasets.CIFAR10(self.hparams.data_dir, train=True, download=True)
-        datasets.CIFAR10(self.hparams.data_dir, train=False, download=True)
+        datasets.CIFAR10(self.hparams["data_dir"], train=True, download=True)
+        datasets.CIFAR10(self.hparams["data_dir"], train=False, download=True)
 
-    def setup(self, stage=None):
+    def setup(self, stage: str | None = None) -> None:
         if stage == "fit" or stage is None:
             cifar_full = datasets.CIFAR10(
-                self.hparams.data_dir, train=True, transform=self.transform
+                self.hparams["data_dir"], train=True, transform=self.transform
             )
             self.cifar_train, self.cifar_val = random_split(
                 cifar_full, [45000, 5000], generator=torch.Generator().manual_seed(13)
@@ -38,30 +40,30 @@ class CIFAR10DataModule(pl.LightningDataModule):
 
         if stage == "test" or stage is None:
             self.cifar_test = datasets.CIFAR10(
-                self.hparams.data_dir, train=False, transform=self.transform
+                self.hparams["data_dir"], train=False, transform=self.transform
             )
 
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader[Any]:
         return DataLoader(
             self.cifar_train,
-            batch_size=self.hparams.batch_size,
-            num_workers=self.hparams.num_workers,
-            pin_memory=self.hparams.pin_memory,
+            batch_size=self.hparams["batch_size"],
+            num_workers=self.hparams["num_workers"],
+            pin_memory=self.hparams["pin_memory"],
             shuffle=True,
         )
 
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader[Any]:
         return DataLoader(
             self.cifar_val,
-            batch_size=self.hparams.batch_size,
-            num_workers=self.hparams.num_workers,
-            pin_memory=self.hparams.pin_memory,
+            batch_size=self.hparams["batch_size"],
+            num_workers=self.hparams["num_workers"],
+            pin_memory=self.hparams["pin_memory"],
         )
 
-    def test_dataloader(self):
+    def test_dataloader(self) -> DataLoader[Any]:
         return DataLoader(
             self.cifar_test,
-            batch_size=self.hparams.batch_size,
-            num_workers=self.hparams.num_workers,
-            pin_memory=self.hparams.pin_memory,
+            batch_size=self.hparams["batch_size"],
+            num_workers=self.hparams["num_workers"],
+            pin_memory=self.hparams["pin_memory"],
         )
