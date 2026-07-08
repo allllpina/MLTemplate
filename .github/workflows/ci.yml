@@ -10,21 +10,28 @@ jobs:
     runs-on: ubuntu-latest
   
     steps:
-      # 1. Pull code from repo
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Installing uv
+      - name: Restore linters cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .mypy_cache
+            .ruff_cache
+          key: ${{ runner.os }}-linters-${{ hashFiles('uv.lock', 'pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-linters-
+
       - name: Set up uv
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
+          cache-dependency-glob: "uv.lock"
           python-version: "3.12"
 
-      # 3. Installing all dependencies
       - name: Install dependencies
         run: uv sync --frozen
 
-      # 4. Run all linters
       - name: Run Quality Checks
         run: make check
