@@ -34,10 +34,10 @@ If you utilize this framework template in your research or engineering workflows
 
 ```bibtex
 @software{MLFramework_Template_2026,
-  author = {Your Name},
+  author = {Danylo Chystiakov},
   title = {MLFramework Template: A Reproducible MLOps Environment},
   year = {2026},
-  url = {[https://github.com/your-username/your-repository](https://github.com/your-username/your-repository)}
+  url = {[https://github.com/allllpina/MLTemplate](https://github.com/allllpina/MLTemplate)}
 }
 ```
 ## License
